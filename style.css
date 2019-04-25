@@ -1,0 +1,13 @@
+body      { 
+	padding: 0; 
+	margin: 0;
+} 
+
+/********************** Canvas ********************/
+#canvasDiv { 
+	margin: 20px auto auto auto;
+	width: 50%;
+}
+.p5Canvas {
+	border: 1px solid black;
+}
