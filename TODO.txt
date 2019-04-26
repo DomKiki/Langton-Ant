@@ -1,9 +1,18 @@
 Features
 
-- Add case for straight step (no turning)
 - Zoom in/out with mouse scroll
 	- Auto-focus on the Ant
 - Move with directional arrows
 - Dynamic canvas size, colors and turns
+	- onClick on circles (pathCanvas)
+		- select color and action
 	- Import/Export settings
 	- Seed random
+	
+Design
+
+- Put both canvas on the same level
+
+Refactoring
+
+- Muchas variabiles globales, to changerino

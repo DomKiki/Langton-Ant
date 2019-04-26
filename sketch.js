@@ -1,58 +1,121 @@
 /****************** Global variables *****************/
 
 // Canvas
-var canvas;
-
+var mCanvas,
+	pCanvas;
+	
 var grid;
 
 var ants = 5;
 var antPos;
 var cyclesPerFrame = 1000;
 
-var directions = Object.freeze({"UP": 0, "RIGHT": 1, "DOWN": 2, "LEFT": 3});
+var directions = Object.freeze({"UP": 2, "RIGHT": 3, "DOWN": 4, "LEFT": 5});
 var dirAmount  = 4;
 var dir;
 
-// Equivalencies array (index is src)
-var cycles = [ 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, 1, 1];
-var colors = [ 'rgb(255, 255, 255)', 'rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(255, 153, 0)', 'rgb(0, 0, 0)', 'rgb(127, 127, 127)',
-               'rgb(0, 204, 255)', 'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
+const dirArrows = ['↰', '-', '↱', '⇑', '⇒', '⇓', '⇐'];
 
-/********************* p5 Methods ********************/
-
-function setup() {
+// Cycles array
+var colors = [ 'white', 'red', 'lime', 'rgb(255, 153, 0)', 'black', 'darkgray', 'rgb(0, 204, 255)', 
+			   'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
+var cycles = randomCycles();
+//var cycles = [ 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, 1, 1];
 	
-	canvas = createCanvas(800, 600);	
-	canvas.parent("canvasDiv");
+/****************** Canvas instances *****************/
 	
-	background(255);
-	noFill();
+var mainCanvas = function(p) {
 	
-	grid = new Array(width);
-	for (var i = 0; i < width; i++) {
-		grid[i] = new Array(height);
-		for (var j = 0; j < grid[i].length; j++)
-			grid[i][j] = 0;
-	}
-
-	antPos = new Array(ants);
-	dir    = new Array(ants);
-	for (var i = 0; i < ants; i++) {
-		var v = createVector(floor(random(width)), floor(random(height)));
-		antPos[i] = v;
-		dir[i] = floor(random(dirAmount));
-	}
-	
-}
-
-function draw() {
-	
-	strokeWeight(1);
-	for (var n = 0; n < cyclesPerFrame; n++)
-		for (var ant = 0; ant < ants; ant++)
-			step(ant);
+	p.setup = function() {
 		
-}
+		p.createCanvas(800, 600);
+		
+		p.background(255);
+		p.noFill();
+		
+		// Fill grid with zeros
+		grid = new Array(p.width);
+		for (var i = 0; i < p.width; i++) {
+			grid[i] = new Array(p.height);
+			for (var j = 0; j < grid[i].length; j++)
+				grid[i][j] = 0;
+		}
+
+		// Create ants
+		antPos = new Array(ants);
+		dir    = new Array(ants);
+		for (var i = 0; i < ants; i++) {
+			antPos[i] = p.createVector(p.floor(p.random(p.width)), p.floor(p.random(p.height)));
+			dir[i]    = p.floor(p.random(dirAmount));
+		}
+		
+	}
+
+	p.draw = function() {
+		
+		p.strokeWeight(1);
+		for (var n = 0; n < cyclesPerFrame; n++)
+			for (var ant = 0; ant < ants; ant++)
+				step(ant);
+			
+	}
+};
+mCanvas = new p5(mainCanvas, 'canvasDiv');
+
+var pathCanvas = function(p) {
+	
+	var radius;
+	
+	p.setup = function() {
+		
+		p.createCanvas(200, 200)
+		 .background(255);
+				
+		radius = p.floor(p.width * 0.75) / 2.0;
+		
+	}
+	
+	p.draw = function() {
+		
+		var d = [p.width / 2, p.height / 2];
+		var offset = 40;
+		// 360° arrow
+		p.noStroke()
+		 .fill(0)
+		 .textSize(80)
+		 .textAlign(p.CENTER, p.CENTER)
+		 .text('⟳', d[0] + 3, d[1] + 8);
+		// Circle
+		p.stroke(0)
+		 .noFill()
+		 .strokeWeight(2)
+		 .ellipse(d[0], d[1], radius * 2)
+		 .translate(d[0], d[1]);
+		
+		// Path
+		var pos, alpha,
+			diamC = 25;
+		for (var c = 0; c < colors.length; c++) {
+			// Polar coordinates
+			alpha = (p.TWO_PI / colors.length) * c;
+			pos   = p.createVector(radius * p.cos(alpha), radius * p.sin(alpha));
+			// Circle
+			p.fill(colors[c])
+		     .strokeWeight(0.5)
+			 .ellipse(pos.x, pos.y, diamC);
+			// Direction
+			p.noStroke()
+			 .fill(invert(colors[c]))
+			 .textSize(20)
+			 .text(dirArrows[cycles[c] + 1], pos.x, pos.y);
+		}
+		
+		p.noFill()
+		 .noLoop();
+	}
+	
+};
+pCanvas = new p5(pathCanvas, 'pathDiv');
 
 /************************ Turns **********************/
 
@@ -62,12 +125,16 @@ function turn(ant) {
 	var g = grid[p.x][p.y];
 	var d = (g + 1) % cycles.length;
 	// Color pixel
-	stroke(color(colors[d]));
-	point(p.x, p.y);
+	mCanvas.stroke(mCanvas.color(colors[d]));
+	mCanvas.point(p.x, p.y);
 	// Update direction
-	dir[ant] = (dir[ant] + cycles[g] + dirAmount) % dirAmount;
+	if (mCanvas.abs(cycles[g]) > 1)
+		dir[ant] = cycles[g];
+	else
+		dir[ant] = (dir[ant] + cycles[g] + dirAmount) % dirAmount;
 	// Set grid value
 	grid[p.x][p.y] = d;
+	
 	
 }
 
@@ -77,8 +144,8 @@ function step(ant) {
 	turn(ant);
 	
 	// Apply move
-	var m = createVector(0,0);
-	switch(dir[ant]) {
+	var m = mCanvas.createVector(0,0);
+	switch(dir[ant] + directions.UP) {
 		case directions.UP:
 			m.y = -1;
 			break;
@@ -97,7 +164,26 @@ function step(ant) {
 	antPos[ant].add(m);
 	
 	// Wrap world on itself
-	antPos[ant].x = (antPos[ant].x + width)  % width;
-	antPos[ant].y = (antPos[ant].y + height) % height;
+	antPos[ant].x = (antPos[ant].x + mCanvas.width)  % mCanvas.width;
+	antPos[ant].y = (antPos[ant].y + mCanvas.height) % mCanvas.height;
+	
+}
+
+/************************* Misc **********************/
+
+function randomCycles() {
+	
+	var arr = new Array(colors.length);
+	for (var c = 0; c < colors.length; c++)
+		arr[c] = Math.floor(Math.random() * dirArrows.length) - 1;
+	return arr;
+	
+}
+function invert(c) {
+	
+	var r = 255 - pCanvas.red(c),
+		g = 255 - pCanvas.green(c),
+		b = 255 - pCanvas.blue(c);
+	return pCanvas.color(r,g,b);
 	
 }
