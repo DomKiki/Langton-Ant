@@ -1,0 +1,9 @@
+Features
+
+- Add case for straight step (no turning)
+- Zoom in/out with mouse scroll
+	- Auto-focus on the Ant
+- Move with directional arrows
+- Dynamic canvas size, colors and turns
+	- Import/Export settings
+	- Seed random
