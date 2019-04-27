@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="./style.css">
-    <title>Langton's Ant</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
-    <script src="sketch.js"></script>
-  </head>
-  <body>
-	<div id="canvasDiv"></div>
-	<div id="pathDiv"></div>
-  </body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="./style.css">
+		<title>Langton's Ant</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+		<script src="sketch.js"></script>
+	</head>
+	<body>
+		<div id="canvasDiv"></div>
+		<div id="optDiv">
+			<span id="leftOptions" class="options">
+			</span>
+			<span id="cyclePath" class="options">
+			</span>
+			<span id="rightOptions" class="options hidden">
+				<table>
+					<tr>
+						<th>Color</th>
+						<td id="tdColorPicker"></td>
+					</tr>
+				</table>
+			</span>
+		</div>
+	</body>
+	<script>
+	
+		// Instantiates a jscolor input with a specific color
+		var createColorPicker = function(color) { 
+			// Create Color Picker
+			var input = document.createElement('INPUT');
+			var picker = new jscolor(input, {onFineChange: "oCanvas.updateColor(this.toRGBString())"});
+			picker.fromString(color);
+			// Cleanup and append again
+			var node = document.getElementById("tdColorPicker");
+			while (node.lastChild)
+				node.removeChild(node.lastChild);
+			document.getElementById("tdColorPicker").appendChild(input);
+		}
+	</script>
 </html>

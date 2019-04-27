@@ -2,7 +2,7 @@
 
 // Canvas
 var mCanvas,
-	pCanvas;
+	oCanvas;
 	
 var grid;
 
@@ -17,8 +17,7 @@ var dir;
 const dirArrows = ['↰', '-', '↱', '⇑', '⇒', '⇓', '⇐'];
 
 // Cycles array
-var colors = [ 'white', 'red', 'lime', 'rgb(255, 153, 0)', 'black', 'darkgray', 'rgb(0, 204, 255)', 
-			   'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
+var colors = [ 'rgb(255, 255, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0 ,0)', 'rgb(255, 153, 0)', 'rgb(0, 0, 0)', 'rgb(100, 100, 100)', 'rgb(0, 204, 255)', 'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
 var cycles = randomCycles();
 //var cycles = [ 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, 1, 1];
 	
@@ -62,20 +61,29 @@ var mainCanvas = function(p) {
 };
 mCanvas = new p5(mainCanvas, 'canvasDiv');
 
-var pathCanvas = function(p) {
+var optionsCanvas = function(p) {
 	
+	// Big circle
 	var radius;
+	// Little circles
+	var diamC = 25;
+	var canvas;
+	// Little circle targeted for options modification
+	var target;
 	
 	p.setup = function() {
 		
-		p.createCanvas(200, 200)
-		 .background(255);
+		canvas = p.createCanvas(200, 200);
+		p.background(255);
+		canvas.mousePressed(p.editColor);
 				
 		radius = p.floor(p.width * 0.75) / 2.0;
 		
 	}
 	
-	p.draw = function() {
+	p.draw = function() { p.drawCycle(); }
+	
+	p.drawCycle = function() {
 		
 		var d = [p.width / 2, p.height / 2];
 		var offset = 40;
@@ -93,11 +101,10 @@ var pathCanvas = function(p) {
 		 .translate(d[0], d[1]);
 		
 		// Path
-		var pos, alpha,
-			diamC = 25;
+		var pos, alpha;
 		for (var c = 0; c < colors.length; c++) {
 			// Polar coordinates
-			alpha = (p.TWO_PI / colors.length) * c;
+			alpha = ((p.TWO_PI / colors.length) * c) - p.HALF_PI;
 			pos   = p.createVector(radius * p.cos(alpha), radius * p.sin(alpha));
 			// Circle
 			p.fill(colors[c])
@@ -110,12 +117,55 @@ var pathCanvas = function(p) {
 			 .text(dirArrows[cycles[c] + 1], pos.x, pos.y);
 		}
 		
-		p.noFill()
-		 .noLoop();
+		p.noFill();
+		
+	}
+	
+	p.editColor = function() {
+		// Click on circle
+		target = p.onCircle(p.mouseX, p.mouseY);
+		if (target > -1)
+			p.showOptions(target);
+	}
+	
+	p.showOptions = function(index) {
+		
+		// Setup options
+		createColorPicker(colors[index]);
+		
+		// Turn on visibility
+		p.select("#rightOptions")
+		 .removeClass("hidden");
+		
+	}
+	
+	p.updateColor = function(rgb) { 
+		//
+		// Not sure if it works
+		//
+		if (colors.includes(rgb)) {
+			console.log("duplicate !");
+			return;
+		}
+		colors[target] = rgb; 
+	}
+	
+	p.onCircle = function(x,y) {
+		// Map mouse position to polar coordinates (relative to center)
+		var mouse = p.createVector(p.map(p.mouseX, 0, 200, -3 * diamC, 3 * diamC), p.map(p.mouseY, 0, 200, -3 * diamC, 3 * diamC));
+		var alpha, pos;
+		for (var c = 0; c < colors.length; c++) {
+			// Distance to circle centers
+			alpha = ((p.TWO_PI / colors.length) * c) - p.HALF_PI;
+			pos   = p.createVector(radius * p.cos(alpha), radius * p.sin(alpha));
+			if (p.dist(pos.x, pos.y, mouse.x, mouse.y) <= diamC)
+				return c;
+		}
+		return -1;
 	}
 	
 };
-pCanvas = new p5(pathCanvas, 'pathDiv');
+oCanvas = new p5(optionsCanvas, 'cyclePath');
 
 /************************ Turns **********************/
 
@@ -171,19 +221,26 @@ function step(ant) {
 
 /************************* Misc **********************/
 
-function randomCycles() {
+function randomCycles(allow) {
 	
 	var arr = new Array(colors.length);
-	for (var c = 0; c < colors.length; c++)
-		arr[c] = Math.floor(Math.random() * dirArrows.length) - 1;
+	var rnd;
+	for (var c = 0; c < colors.length; c++) {
+		rnd = Math.floor(Math.random() * dirArrows.length) - 1;
+		if (allow != null)
+			while (!allow.includes(rnd))
+				rnd = Math.floor(Math.random() * dirArrows.length) - 1;
+		arr[c] = rnd;	
+	}
 	return arr;
 	
 }
+
 function invert(c) {
 	
-	var r = 255 - pCanvas.red(c),
-		g = 255 - pCanvas.green(c),
-		b = 255 - pCanvas.blue(c);
-	return pCanvas.color(r,g,b);
+	var r = 255 - oCanvas.red(c),
+		g = 255 - oCanvas.green(c),
+		b = 255 - oCanvas.blue(c);
+	return oCanvas.color(r,g,b);
 	
 }

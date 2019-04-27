@@ -3,16 +3,50 @@ body {
 	margin: 0;
 } 
 
-/********************** Canvas ********************/
-#canvasDiv { 
-	margin: 20px auto auto auto;
-	width: 50%;
-	/*display: inline;*/
+table {
+	font: 14px arial;
+	color: rgb(100, 100, 100);
+	border: none;
+	border-spacing: 10px;
 }
 
-#pathDiv {
+#canvasDiv, #optDiv {
+	margin: auto;
 	text-align: center;
 }
+
+#canvasDiv {
+	height: 600px;
+	width: 75%;
+	margin-top: 20px;
+}
+
+#optDiv {
+	height: 200px;
+	width: 50%;
+	margin-top: 10px;
+	border: 1px dashed gray; /* à supprimer */
+}
+
+#rightOptions {
+	padding: 10px 0 0 10px;
+}
+
 #defaultCanvas0 {
 	border: 1px solid black;
 }
+
+.hidden {
+	visibility: hidden;
+}
+
+.jscolor {
+	display: inline;
+	color: black;
+	top: 0px;
+}
+
+.options {
+	float: left;
+}
+
