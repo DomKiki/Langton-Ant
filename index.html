@@ -15,6 +15,12 @@
 		<div id="canvasDiv"></div>
 		<div id="optDiv">
 			<span id="leftOptions" class="options">
+				<button id="btnClear" onclick="mCanvas.initGrid()">Clear</button><br>
+				<button id="btnPause" onclick="mCanvas.pause()">Pause</button><br>
+				<button id="btnStep" onclick="mCanvas.oneStep()">Step</button>
+				<button id="btnFrame" onclick="mCanvas.oneFrame()">Frame</button><br>
+				<p id="txtSPF">1000 SpF</p>
+				<input type="range" id="sldSPF" class="slider" min="1" max="2000" value="1000" onchange="mCanvas.updateSPF(this.value)">
 			</span>
 			<span id="cyclePath" class="options">
 			</span>
@@ -24,23 +30,34 @@
 						<th>Color</th>
 						<td id="tdColorPicker"></td>
 					</tr>
+					<tr>
+						<th>Direction</th>
+						<td>
+							<form name="formDir">
+								<input type="radio" name="rdDir" value="-1" onchange="oCanvas.updateDir(this.value)">&#x21B0;
+								<input type="radio" name="rdDir" value="0" onchange="oCanvas.updateDir(this.value)">-
+								<input type="radio" name="rdDir" value="1" onchange="oCanvas.updateDir(this.value)">&#x21B1;<br>
+								<input type="radio" name="rdDir" value="2" onchange="oCanvas.updateDir(this.value)">&#x21D1;
+								<input type="radio" name="rdDir" value="3" onchange="oCanvas.updateDir(this.value)">&#x21D2;
+								<input type="radio" name="rdDir" value="4" onchange="oCanvas.updateDir(this.value)">&#x21D3;
+								<input type="radio" name="rdDir" value="5" onchange="oCanvas.updateDir(this.value)">&#x21D0;
+							</form>
+						</td>
+					</tr>
 				</table>
 			</span>
 		</div>
 	</body>
 	<script>
 	
-		// Instantiates a jscolor input with a specific color
-		var createColorPicker = function(color) { 
-			// Create Color Picker
-			var input = document.createElement('INPUT');
-			var picker = new jscolor(input, {onFineChange: "oCanvas.updateColor(this.toRGBString())"});
-			picker.fromString(color);
-			// Cleanup and append again
-			var node = document.getElementById("tdColorPicker");
-			while (node.lastChild)
-				node.removeChild(node.lastChild);
-			document.getElementById("tdColorPicker").appendChild(input);
-		}
+		/* Adds Event Listeners on radio buttons
+		var rad = document.formDir.rdDir;
+		for (var i = 0; i < rad.length; i++) {
+			rad[i].addEventListener("click", oCanvas.updateDir(this.value));
+			console.log(rad[i]);
+		} 
+		Well it doesn't work so for now the kwikfix : good ol' copy-paste !
+		*/
+	
 	</script>
 </html>

@@ -6,9 +6,8 @@ var mCanvas,
 	
 var grid;
 
-var ants = 5;
+var ants = 8;
 var antPos;
-var cyclesPerFrame = 1000;
 
 var directions = Object.freeze({"UP": 2, "RIGHT": 3, "DOWN": 4, "LEFT": 5});
 var dirAmount  = 4;
@@ -17,28 +16,35 @@ var dir;
 const dirArrows = ['↰', '-', '↱', '⇑', '⇒', '⇓', '⇐'];
 
 // Cycles array
-var colors = [ 'rgb(255, 255, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0 ,0)', 'rgb(255, 153, 0)', 'rgb(0, 0, 0)', 'rgb(100, 100, 100)', 'rgb(0, 204, 255)', 'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
-var cycles = randomCycles();
-//var cycles = [ 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, 1, 1];
+var colors = [ 'rgb(255, 255, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0 ,0)', 'rgb(255, 153, 0)', 'rgb(0, 0, 0)'];//, 'rgb(100, 100, 100)', 'rgb(0, 204, 255)', 'rgb(0, 0, 102)', 'rgb(255, 102, 255)', 'rgb(153, 0, 153)', 'rgb(153, 51, 0)', 'rgb(51, 153, 102)'];
+//var cycles = randomCycles([-1,0,1]);
+var cycles = [ 1, 1, -1, -1, -1];//, 1, -1, -1, -1, 1, 1, 1];
 	
 /****************** Canvas instances *****************/
 	
 var mainCanvas = function(p) {
 	
+	var looping = true;
+	
+	var btnPause;
+	
+	var stepsPerFrame;
+	var txtSPF;
+	
 	p.setup = function() {
 		
-		p.createCanvas(800, 600);
+		p.createCanvas(1200, 800);
+		p.background(255)
+		 .noFill()
+		 .strokeWeight(1);
 		
-		p.background(255);
-		p.noFill();
+		btnPause = p.select("#btnPause");
+		txtSPF   = p.select("#txtSPF");
+		
+		stepsPerFrame = p.select("#sldSPF").value();
 		
 		// Fill grid with zeros
-		grid = new Array(p.width);
-		for (var i = 0; i < p.width; i++) {
-			grid[i] = new Array(p.height);
-			for (var j = 0; j < grid[i].length; j++)
-				grid[i][j] = 0;
-		}
+		p.initGrid();
 
 		// Create ants
 		antPos = new Array(ants);
@@ -50,14 +56,37 @@ var mainCanvas = function(p) {
 		
 	}
 
-	p.draw = function() {
-		
-		p.strokeWeight(1);
-		for (var n = 0; n < cyclesPerFrame; n++)
-			for (var ant = 0; ant < ants; ant++)
-				step(ant);
-			
+	p.draw = function() { p.oneFrame(); }
+	
+	p.initGrid = function() {
+		p.background(255);
+		grid = new Array(p.width);
+		for (var i = 0; i < p.width; i++) {
+			grid[i] = new Array(p.height);
+			for (var j = 0; j < grid[i].length; j++)
+				grid[i][j] = 0;
+		}
 	}
+
+	p.pause = function() {
+		looping = !looping;
+		if (looping) {
+			btnPause.html("Pause");
+			p.loop();
+		}
+		else {
+			btnPause.html("Resume");
+			p.noLoop();
+		}
+	}
+	p.oneStep  = function() { for (var ant = 0; ant < ants; ant++) step(ant); }
+	p.oneFrame = function() { for (var n = 0; n < stepsPerFrame; n++) p.oneStep(); }
+	
+	p.updateSPF = function(spf) { 
+		stepsPerFrame = spf; 
+		txtSPF.html(spf + " SpF");
+	}
+	
 };
 mCanvas = new p5(mainCanvas, 'canvasDiv');
 
@@ -126,17 +155,27 @@ var optionsCanvas = function(p) {
 		target = p.onCircle(p.mouseX, p.mouseY);
 		if (target > -1)
 			p.showOptions(target);
+		else
+			p.hideOptions();
 	}
 	
 	p.showOptions = function(index) {
 		
 		// Setup options
 		createColorPicker(colors[index]);
+		checkRadioDirection(cycles[target]);
 		
 		// Turn on visibility
 		p.select("#rightOptions")
 		 .removeClass("hidden");
 		
+	}
+	
+	p.hideOptions = function() {
+		p.select("#rightOptions")
+		// Avoid adding multiple times
+		 .removeClass("hidden")
+		 .addClass("hidden");
 	}
 	
 	p.updateColor = function(rgb) { 
@@ -148,6 +187,12 @@ var optionsCanvas = function(p) {
 			return;
 		}
 		colors[target] = rgb; 
+	}
+	
+	p.updateDir = function(dir) {
+		if ((target >= 0) && (dir >= -1) && (dir <= directions.LEFT)) {
+			cycles[target] = parseInt(dir);
+		}
 	}
 	
 	p.onCircle = function(x,y) {
@@ -162,7 +207,7 @@ var optionsCanvas = function(p) {
 				return c;
 		}
 		return -1;
-	}
+	}	
 	
 };
 oCanvas = new p5(optionsCanvas, 'cyclePath');
@@ -242,5 +287,31 @@ function invert(c) {
 		g = 255 - oCanvas.green(c),
 		b = 255 - oCanvas.blue(c);
 	return oCanvas.color(r,g,b);
+	
+}
+
+function createColorPicker(color) { 
+
+	// Create Color Picker
+	var input = document.createElement('BUTTON');
+	var picker = new jscolor(input, {
+		onFineChange: "oCanvas.updateColor(this.toRGBString())",
+		valueElement: null
+	});
+	picker.fromString(color);
+	
+	// Cleanup and append again
+	var node = document.getElementById("tdColorPicker");
+	while (node.lastChild)
+		node.removeChild(node.lastChild);
+	document.getElementById("tdColorPicker").appendChild(input);
+	
+}
+
+function checkRadioDirection(value) {
+	
+	var rad = document.formDir.rdDir;
+	for (var i = 0; i < rad.length; i++)
+		rad[i].checked = (rad[i].value == value);
 	
 }

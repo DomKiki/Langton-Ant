@@ -3,10 +3,9 @@ Features
 - Zoom in/out with mouse scroll
 	- Auto-focus on the Ant
 - Move with directional arrows
-- Dynamic canvas size, colors and turns
-	- onClick on circles (pathCanvas)
-		- select color and action
-	- Import/Export settings
+- Add/remove cycle nodes
+- Ant position control (random / fixed)
+- Import/Export settings
 	- Seed random
 	
 Design

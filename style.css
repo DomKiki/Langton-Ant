@@ -16,20 +16,41 @@ table {
 }
 
 #canvasDiv {
-	height: 600px;
+	height: 800;
 	width: 75%;
 	margin-top: 20px;
 }
 
 #optDiv {
 	height: 200px;
-	width: 50%;
+	width: 60%;
 	margin-top: 10px;
 	border: 1px dashed gray; /* à supprimer */
 }
 
-#rightOptions {
+#leftOptions button {
+	height: 30px;
+	width: 70px;
+	margin: 10px 10px 0 0;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#leftOptions, #rightOptions {
+	display: table;
+	border-spacing: 10px;
+	height: 100%;
 	padding: 10px 0 0 10px;
+}
+
+#tdColorPicker button {
+	height: 30px;
+	width: 70px;
+}
+
+#txtSPF {
+	text-align: center;
+	margin-bottom: 0px;
 }
 
 #defaultCanvas0 {
