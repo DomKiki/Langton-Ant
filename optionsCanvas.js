@@ -95,7 +95,7 @@ var optionsCanvas = function(p) {
 			p.showOptions(target);
 		else {
 			p.show(divNodeOptions, 0);
-		p.display(txtInstructions, "block");
+			p.display(txtInstructions, "block");
 		}
 	}
 	
@@ -214,6 +214,7 @@ var optionsCanvas = function(p) {
 	p.resetCycle = function() {
 		target = -1;
 		p.show(divNodeOptions, 0);
+		p.display(txtInstructions, "block");
 		p.clearCanvas();
 		p.drawCycle();
 	}
