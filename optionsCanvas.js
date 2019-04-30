@@ -13,6 +13,8 @@ var optionsCanvas = function(p) {
 	var divNodeOptions;
 	var tdNumberAnts;
 	
+	var txtInstructions;
+	
 	p.setup = function() {
 		
 		canvas = p.createCanvas(200, 200);
@@ -21,25 +23,29 @@ var optionsCanvas = function(p) {
 				
 		radius = p.floor(p.width * 0.75) / 2.0;
 		
-		btnAddNode = p.select("#btnAddNode");
-		btnAddNode.mousePressed(p.addNode);
-		btnRemoveNode = p.select("#btnRemoveNode");
-		btnRemoveNode.mousePressed(p.removeNode);
-		
 		divNodeOptions = p.select("#nodeOptions");
+		btnAddNode     = p.select("#btnAddNode");
+		btnRemoveNode  = p.select("#btnRemoveNode");
+		btnAddNode.mousePressed(p.addNode);
+		btnRemoveNode.mousePressed(p.removeNode);
+		p.show(divNodeOptions, 0);
+		
+		btnAddAnt    = p.select("#btnAddAnt");
+		btnRemoveAnt = p.select("#btnRemoveAnt");
+		btnAddAnt.mousePressed(p.addAnt);
+		btnRemoveAnt.mousePressed(p.removeAnt);
+		
+		tdNumberAnts = p.select("#tdNumberAnts");
+		p.updateAnts(ants);
+		
+		txtInstructions = p.select("#txtInstructions");
+		txtInstructions.style("visibility", "visible");
 		
 		var radios = p.selectAll("input", p.select("#tdRadioDir"));
 		for (var r = 0; r < radios.length; r++)
 			// As .changed() doesn't allow callbacks with arguments...
 			radios[r].attribute('onchange', 'oCanvas.updateDir(this.value)');
 		
-		tdNumberAnts = p.select("#tdNumberAnts");
-		p.updateAnts(ants);
-		
-		btnAddAnt    = p.select("#btnAddAnt");
-		btnAddAnt.mousePressed(p.addAnt);
-		btnRemoveAnt = p.select("#btnRemoveAnt");
-		btnRemoveAnt.mousePressed(p.removeAnt);
 	}
 	
 	p.draw = function() { p.drawCycle(); }
@@ -87,30 +93,31 @@ var optionsCanvas = function(p) {
 		target = p.onCircle(p.mouseX, p.mouseY);
 		if (target > -1)
 			p.showOptions(target);
-		else
-			p.hide(divNodeOptions);
+		else {
+			p.show(divNodeOptions, 0);
+		p.display(txtInstructions, "block");
+		}
 	}
 	
 	p.showOptions = function(index) {
+		
+		// Hide instructions
+		p.display(txtInstructions, "none");
 		
 		// Setup options
 		createColorPicker(colors[index]);
 		checkRadioDirection(cycles[target]);
 		if (cycles.length <= 2)
-			p.hide(btnRemoveNode);
+			p.show(btnRemoveNode, 0);
 		
-		// Turn on visibility
-		divNodeOptions.removeClass("hidden");
+		// Show options
+		p.show(divNodeOptions, 1);
 		
 	}
 	
-	p.hide = function(el) {
-		p.select(el);
-		if (el != null)
-		// Avoid adding multiple times
-			el.removeClass("hidden")
-		      .addClass("hidden");
-	}
+	p.show = function(el, bool=true) { if (el) el.style("visibility", bool ? "visible" : "hidden"); }
+	
+	p.display = function(el, d) { if (el) el.style("display", d); }
 	
 	p.updateColor = function(rgb) { 
 		//
@@ -206,7 +213,7 @@ var optionsCanvas = function(p) {
 	
 	p.resetCycle = function() {
 		target = -1;
-		p.hide(divNodeOptions);
+		p.show(divNodeOptions, 0);
 		p.clearCanvas();
 		p.drawCycle();
 	}

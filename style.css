@@ -23,7 +23,7 @@ table {
 
 #optDiv {
 	height: 200px;
-	width: 70%;
+	width: 50%;
 	margin-top: 10px;
 }
 
@@ -34,6 +34,11 @@ table {
 	display: table-cell;
 	vertical-align: middle;
 }
+
+#actionsOptions { width: 30%; }
+#cyclePath      { width: 20%; }
+#nodeOptions    { width: 35%; }
+#antOptions     { width: 10%; }
 
 #actionsOptions, #nodeOptions {
 	display: table;
@@ -47,9 +52,7 @@ table {
 	padding: 0;
 }
 
-#btnAddNode {
-	visibility: visible;
-}
+#btnAddNode { visibility: visible; }
 
 #tdColorPicker button {
 	height: 30px;
@@ -65,13 +68,17 @@ table {
 	margin-bottom: 0px;
 }
 
+#txtInstructions {
+	padding-top: 20%;
+	font-style: italic;
+}
+
 #antOptions table {
 	height: 100%;
 }
 
 .btnAction {
-	height: 25px;
-	background-color: white;	
+	height: 25px;	
 	border: 1px solid;
 	font-weight: bold;
 	font-size: 15px;
