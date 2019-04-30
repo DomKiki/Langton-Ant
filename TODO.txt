@@ -1,7 +1,6 @@
 Features
 
-- Add/Remove Ant
-	- Spawn position (random / fixed)
+- Ant Spawn position (random / fixed)
 - Import/Export settings
 	- Seed random
 - Camera movement
@@ -16,4 +15,4 @@ Design
 Refactoring
 
 - Muchas variabiles globales, to changerino
-- Add Event Listeners in code, html should not reference either mCanvas nor oCanvas
+- Add Event Listeners in code, html shouldn't reference either mCanvas nor oCanvas

@@ -1,6 +1,6 @@
 /****************** Global variables *****************/
 
-var ants = 10;
+var ants = 1;
 var antPos;
 
 var directions = Object.freeze({"UP": 2, "RIGHT": 3, "DOWN": 4, "LEFT": 5});

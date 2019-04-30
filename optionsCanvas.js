@@ -8,9 +8,10 @@ var optionsCanvas = function(p) {
 	// Little circle targeted for options modification
 	var target;
 	
-	var btnAddNode;
-	var btnRemoveNode;
-	var divRightOptions;
+	var btnAddNode, btnRemoveNode;
+	var btnAddAnt,  btnRemoveAnt;
+	var divNodeOptions;
+	var tdNumberAnts;
 	
 	p.setup = function() {
 		
@@ -25,13 +26,20 @@ var optionsCanvas = function(p) {
 		btnRemoveNode = p.select("#btnRemoveNode");
 		btnRemoveNode.mousePressed(p.removeNode);
 		
-		divRightOptions = p.select("#rightOptions");
+		divNodeOptions = p.select("#nodeOptions");
 		
-		var ctnr = p.select("#tdRadioDir");
-		var radios = p.selectAll("input", ctnr);
+		var radios = p.selectAll("input", p.select("#tdRadioDir"));
 		for (var r = 0; r < radios.length; r++)
 			// As .changed() doesn't allow callbacks with arguments...
 			radios[r].attribute('onchange', 'oCanvas.updateDir(this.value)');
+		
+		tdNumberAnts = p.select("#tdNumberAnts");
+		p.updateAnts(ants);
+		
+		btnAddAnt    = p.select("#btnAddAnt");
+		btnAddAnt.mousePressed(p.addAnt);
+		btnRemoveAnt = p.select("#btnRemoveAnt");
+		btnRemoveAnt.mousePressed(p.removeAnt);
 	}
 	
 	p.draw = function() { p.drawCycle(); }
@@ -80,7 +88,7 @@ var optionsCanvas = function(p) {
 		if (target > -1)
 			p.showOptions(target);
 		else
-			p.hide(divRightOptions);
+			p.hide(divNodeOptions);
 	}
 	
 	p.showOptions = function(index) {
@@ -92,7 +100,7 @@ var optionsCanvas = function(p) {
 			p.hide(btnRemoveNode);
 		
 		// Turn on visibility
-		divRightOptions.removeClass("hidden");
+		divNodeOptions.removeClass("hidden");
 		
 	}
 	
@@ -118,6 +126,12 @@ var optionsCanvas = function(p) {
 			cycles[target] = parseInt(dir);
 			p.clearCanvas();
 		}
+	}
+	
+	p.updateAnts = function(a) {
+		var str = a + " Ant";
+		if (a > 1) str += "s";
+		tdNumberAnts.html(str);
 	}
 	
 	p.onCircle = function(x,y) {
@@ -164,6 +178,25 @@ var optionsCanvas = function(p) {
 		}
 	}
 	
+	p.addAnt = function() { 
+		ants++;
+		var newPos = p.createVector(p.round(p.random(mCanvas.width)), p.round(p.random(mCanvas.height)));
+		antPos.push(newPos);
+		dir.push(p.floor(p.random(dirAmount + 3) - 1));
+		p.updateAnts(ants);
+		if (ants >= 2)
+			btnRemoveAnt.removeAttribute('disabled');
+	}
+	
+	p.removeAnt = function() { 
+		ants--;
+		antPos.splice(antPos.length - 1, 1); 
+		dir.splice(dir.length - 1, 1);
+		p.updateAnts(ants);
+		if (ants < 2)
+			btnRemoveAnt.attribute('disabled', true);
+	}
+	
 	p.clearCanvas = function() {
 		p.translate(-p.width / 2, -p.height / 2)
 		 .noStroke()
@@ -173,7 +206,7 @@ var optionsCanvas = function(p) {
 	
 	p.resetCycle = function() {
 		target = -1;
-		p.hide(divRightOptions);
+		p.hide(divNodeOptions);
 		p.clearCanvas();
 		p.drawCycle();
 	}

@@ -23,12 +23,11 @@ table {
 
 #optDiv {
 	height: 200px;
-	width: 50%;
+	width: 70%;
 	margin-top: 10px;
-	 border: 1px dashed gray; 
 }
 
-#leftOptions button {
+#actionsOptions button {
 	height: 30px;
 	width: 70px;
 	margin: 10px 10px 0 0;
@@ -36,14 +35,14 @@ table {
 	vertical-align: middle;
 }
 
-#leftOptions, #rightOptions {
+#actionsOptions, #nodeOptions {
 	display: table;
 	border-spacing: 20px;
 	height: 100%;
 	padding: 10px 0 0 10px;
 }
 
-#rightOptions {
+#nodeOptions, #antOptions {
 	vertical-align: middle;
 	padding: 0;
 }
@@ -64,6 +63,10 @@ table {
 #txtSPF {
 	text-align: center;
 	margin-bottom: 0px;
+}
+
+#antOptions table {
+	height: 100%;
 }
 
 .btnAction {
@@ -105,6 +108,7 @@ table {
 }
 
 .options {
+	height: 100%;
 	float: left;
 }
 

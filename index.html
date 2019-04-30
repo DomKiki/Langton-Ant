@@ -17,7 +17,7 @@
 		<div id="canvasDiv"></div>
 		<div id="optDiv">
 		
-			<span id="leftOptions" class="options">
+			<span id="actionsOptions" class="options">
 				<button id="btnClear" onclick="mCanvas.clear()">Clear</button><br>
 				<button id="btnPause" onclick="mCanvas.pause()">Pause</button><br>
 				<button id="btnStep" onclick="mCanvas.oneStep()">Step</button>
@@ -28,7 +28,7 @@
 			
 			<span id="cyclePath" class="options"></span>
 			
-			<span id="rightOptions" class="options hidden">
+			<span id="nodeOptions" class="options hidden">
 				<button id="btnAddNode" class="btnAction">Add</button>
 				<table>
 					<tr>
@@ -52,6 +52,14 @@
 					<tr>
 						<td colspan="2"><button id="btnRemoveNode" class="btnAction">Remove</button></td>
 					</tr>
+				</table>
+			</span>
+			
+			<span id="antOptions" class="options">
+				<table>
+					<tr><td><button id="btnAddAnt">+</button></tr></td>
+					<tr><td id="tdNumberAnts"></tr></td>
+					<tr><td><button id="btnRemoveAnt" disabled>-</button></tr></td>
 				</table>
 			</span>
 		</div>
