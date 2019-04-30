@@ -23,9 +23,9 @@ table {
 
 #optDiv {
 	height: 200px;
-	width: 60%;
+	width: 50%;
 	margin-top: 10px;
-	border: 1px dashed gray; /* à supprimer */
+	 border: 1px dashed gray; 
 }
 
 #leftOptions button {
@@ -38,9 +38,18 @@ table {
 
 #leftOptions, #rightOptions {
 	display: table;
-	border-spacing: 10px;
+	border-spacing: 20px;
 	height: 100%;
 	padding: 10px 0 0 10px;
+}
+
+#rightOptions {
+	vertical-align: middle;
+	padding: 0;
+}
+
+#btnAddNode {
+	visibility: visible;
 }
 
 #tdColorPicker button {
@@ -48,9 +57,37 @@ table {
 	width: 70px;
 }
 
+#tdRadioDir {
+	font-weight: bold;
+}
+
 #txtSPF {
 	text-align: center;
 	margin-bottom: 0px;
+}
+
+.btnAction {
+	height: 25px;
+	background-color: white;	
+	border: 1px solid;
+	font-weight: bold;
+	font-size: 15px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#btnRemoveNode {
+	border-color: red;
+	color: red;
+}
+
+#btnAddNode {
+	border-color: lime;
+	color: lime;
+}
+
+.btnAction:hover {
+	cursor: pointer;
 }
 
 #defaultCanvas0 {

@@ -1,12 +1,13 @@
 Features
 
-- Zoom in/out with mouse scroll
-	- Auto-focus on the Ant
-- Move with directional arrows
-- Add/remove cycle nodes
-- Ant position control (random / fixed)
+- Add/Remove Ant
+	- Spawn position (random / fixed)
 - Import/Export settings
 	- Seed random
+- Camera movement
+	- Zoom in/out (mouse scroll)
+	- Move (arrows)
+	- Focus Ant
 	
 Design
 
@@ -15,3 +16,4 @@ Design
 Refactoring
 
 - Muchas variabiles globales, to changerino
+- Add Event Listeners in code, html should not reference either mCanvas nor oCanvas

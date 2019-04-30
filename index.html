@@ -9,22 +9,27 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+		<script src="mainCanvas.js"></script>
+		<script src="optionsCanvas.js"></script>
 		<script src="sketch.js"></script>
 	</head>
 	<body>
 		<div id="canvasDiv"></div>
 		<div id="optDiv">
+		
 			<span id="leftOptions" class="options">
-				<button id="btnClear" onclick="mCanvas.initGrid()">Clear</button><br>
+				<button id="btnClear" onclick="mCanvas.clear()">Clear</button><br>
 				<button id="btnPause" onclick="mCanvas.pause()">Pause</button><br>
 				<button id="btnStep" onclick="mCanvas.oneStep()">Step</button>
 				<button id="btnFrame" onclick="mCanvas.oneFrame()">Frame</button><br>
-				<p id="txtSPF">1000 SpF</p>
-				<input type="range" id="sldSPF" class="slider" min="1" max="2000" value="1000" onchange="mCanvas.updateSPF(this.value)">
+				<p id="txtSPF"></p>
+				<input type="range" id="sldSPF" class="slider" min="1" max="1000" value="600" onchange="mCanvas.updateSPF(this.value)">
 			</span>
-			<span id="cyclePath" class="options">
-			</span>
+			
+			<span id="cyclePath" class="options"></span>
+			
 			<span id="rightOptions" class="options hidden">
+				<button id="btnAddNode" class="btnAction">Add</button>
 				<table>
 					<tr>
 						<th>Color</th>
@@ -32,32 +37,23 @@
 					</tr>
 					<tr>
 						<th>Direction</th>
-						<td>
-							<form name="formDir">
-								<input type="radio" name="rdDir" value="-1" onchange="oCanvas.updateDir(this.value)">&#x21B0;
-								<input type="radio" name="rdDir" value="0" onchange="oCanvas.updateDir(this.value)">-
-								<input type="radio" name="rdDir" value="1" onchange="oCanvas.updateDir(this.value)">&#x21B1;<br>
-								<input type="radio" name="rdDir" value="2" onchange="oCanvas.updateDir(this.value)">&#x21D1;
-								<input type="radio" name="rdDir" value="3" onchange="oCanvas.updateDir(this.value)">&#x21D2;
-								<input type="radio" name="rdDir" value="4" onchange="oCanvas.updateDir(this.value)">&#x21D3;
-								<input type="radio" name="rdDir" value="5" onchange="oCanvas.updateDir(this.value)">&#x21D0;
+						<td id="tdRadioDir">
+							<form name="formDir">					
+								<input type="radio" name="rdDir" value="-1">&#x21B0;
+								<input type="radio" name="rdDir" value="0">-
+								<input type="radio" name="rdDir" value="1">&#x21B1;<br>
+								<input type="radio" name="rdDir" value="2">&#x21D1;
+								<input type="radio" name="rdDir" value="3">&#x21D2;
+								<input type="radio" name="rdDir" value="4">&#x21D3;
+								<input type="radio" name="rdDir" value="5">&#x21D0;
 							</form>
 						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><button id="btnRemoveNode" class="btnAction">Remove</button></td>
 					</tr>
 				</table>
 			</span>
 		</div>
 	</body>
-	<script>
-	
-		/* Adds Event Listeners on radio buttons
-		var rad = document.formDir.rdDir;
-		for (var i = 0; i < rad.length; i++) {
-			rad[i].addEventListener("click", oCanvas.updateDir(this.value));
-			console.log(rad[i]);
-		} 
-		Well it doesn't work so for now the kwikfix : good ol' copy-paste !
-		*/
-	
-	</script>
 </html>
